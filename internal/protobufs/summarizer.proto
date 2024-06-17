@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+
+option go_package = "/filecomponentsservice/pb";
+
+
+message FileComponentIds {
+    repeated int32 file_component_ids = 1;
+}
+
+
+message FileComponentSummary {
+    int32 id = 1;
+    int32 file_component_id = 2;
+    string summary = 3;
+}
+
+
+message FileComponentSummaries {
+    repeated FileComponentSummary file_component_summaries = 1;
+}
+
+
+service SummarizerService {
+    rpc CreateFileComponentSummaries(FileComponentIds) returns (FileComponentSummaries);
+}
