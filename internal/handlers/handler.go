@@ -20,22 +20,12 @@ type SummarizerServiceHandler struct {
 func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Context, req *pb.FileComponentIds) (*pb.FileComponentSummaries, error) {
 	log.Println("received CreateFileComponentSummaries request")
 
-	database := db.GetSingletonInstance()
-
 	fileComponents, err := fileComponentsService.GetFileComponents(req.FileComponentIds)
 	if err != nil {
 		return nil, err
 	}
 
-	var userFilePaths []fileChunksService.UserFilePath
-	for _, fileComponent := range fileComponents {
-		userFilePaths = append(userFilePaths, fileChunksService.UserFilePath{
-			UserId:   fileComponent.UserId,
-			Filepath: fileComponent.FilePath,
-		})
-	}
-
-	fileContents, err := fileChunksService.GetFileContents(userFilePaths)
+	fileContents, err := fileChunksService.GetFileContents(getUserFilePaths(fileComponents))
 	if err != nil {
 		return nil, err
 	}
@@ -60,6 +50,8 @@ func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Cont
 		)
 	}
 
+	database := db.GetSingletonInstance()
+
 	fileComponentSummaries, err := database.BatchSaveFileComponentSummaries(fileComponentSummaryPayloads)
 	if err != nil {
 		return nil, err
@@ -70,6 +62,19 @@ func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Cont
 	}
 
 	return resp, nil
+}
+
+func getUserFilePaths(fileComponents []fileComponentsService.FileComponent) []fileChunksService.UserFilePath {
+	var userFilePaths []fileChunksService.UserFilePath
+
+	for _, fileComponent := range fileComponents {
+		userFilePaths = append(userFilePaths, fileChunksService.UserFilePath{
+			UserId:   fileComponent.UserId,
+			Filepath: fileComponent.FilePath,
+		})
+	}
+
+	return userFilePaths
 }
 
 func getFileComponentContent(fileComponent fileComponentsService.FileComponent, fileContent string) string {
