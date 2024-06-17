@@ -31,7 +31,7 @@ func (server Server) Start(address string) error {
 		return err
 	}
 
-	log.Printf("server listening on %s", address)
+	log.Printf("summarizer server listening on %s", address)
 
 	if err := server.grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)

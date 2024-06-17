@@ -39,7 +39,7 @@ func (postgreSql *PostgreSql) Connect() error {
 
 	postgreSql.db = db
 
-	fmt.Println("Connected to PostgreSQL!")
+	fmt.Println("connected to PostgreSQL")
 	return nil
 }
 
