@@ -17,6 +17,7 @@ type FileComponent struct {
 	FilePath  string
 	StartLine int
 	EndLine   int
+	Content   string
 }
 
 func GetFileComponents(fileComponentIds FileComponentIds) ([]FileComponent, error) {
@@ -45,6 +46,7 @@ func GetFileComponents(fileComponentIds FileComponentIds) ([]FileComponent, erro
 			FilePath:  pbFileComponent.FilePath,
 			StartLine: int(pbFileComponent.StartLine),
 			EndLine:   int(pbFileComponent.EndLine),
+			Content:   pbFileComponent.Content,
 		})
 	}
 
