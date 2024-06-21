@@ -52,8 +52,6 @@ func (postgreSql *PostgreSql) BatchSaveFileComponentSummaries(fileComponentPaylo
 		return nil, err
 	}
 
-	fmt.Println(fileComponentPayloads)
-
 	tx, err := postgreSql.db.Begin()
 	if err != nil {
 		return nil, err

@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SummarizerServiceClient interface {
-	CreateFileComponentSummaries(ctx context.Context, in *FileComponentIds, opts ...grpc.CallOption) (*FileComponentSummaries, error)
+	CreateFileComponentSummaries(ctx context.Context, in *CreateFileComponentSummariesRequest, opts ...grpc.CallOption) (*FileComponentSummaries, error)
 }
 
 type summarizerServiceClient struct {
@@ -37,7 +37,7 @@ func NewSummarizerServiceClient(cc grpc.ClientConnInterface) SummarizerServiceCl
 	return &summarizerServiceClient{cc}
 }
 
-func (c *summarizerServiceClient) CreateFileComponentSummaries(ctx context.Context, in *FileComponentIds, opts ...grpc.CallOption) (*FileComponentSummaries, error) {
+func (c *summarizerServiceClient) CreateFileComponentSummaries(ctx context.Context, in *CreateFileComponentSummariesRequest, opts ...grpc.CallOption) (*FileComponentSummaries, error) {
 	out := new(FileComponentSummaries)
 	err := c.cc.Invoke(ctx, SummarizerService_CreateFileComponentSummaries_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -50,7 +50,7 @@ func (c *summarizerServiceClient) CreateFileComponentSummaries(ctx context.Conte
 // All implementations must embed UnimplementedSummarizerServiceServer
 // for forward compatibility
 type SummarizerServiceServer interface {
-	CreateFileComponentSummaries(context.Context, *FileComponentIds) (*FileComponentSummaries, error)
+	CreateFileComponentSummaries(context.Context, *CreateFileComponentSummariesRequest) (*FileComponentSummaries, error)
 	mustEmbedUnimplementedSummarizerServiceServer()
 }
 
@@ -58,7 +58,7 @@ type SummarizerServiceServer interface {
 type UnimplementedSummarizerServiceServer struct {
 }
 
-func (UnimplementedSummarizerServiceServer) CreateFileComponentSummaries(context.Context, *FileComponentIds) (*FileComponentSummaries, error) {
+func (UnimplementedSummarizerServiceServer) CreateFileComponentSummaries(context.Context, *CreateFileComponentSummariesRequest) (*FileComponentSummaries, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFileComponentSummaries not implemented")
 }
 func (UnimplementedSummarizerServiceServer) mustEmbedUnimplementedSummarizerServiceServer() {}
@@ -75,7 +75,7 @@ func RegisterSummarizerServiceServer(s grpc.ServiceRegistrar, srv SummarizerServ
 }
 
 func _SummarizerService_CreateFileComponentSummaries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FileComponentIds)
+	in := new(CreateFileComponentSummariesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func _SummarizerService_CreateFileComponentSummaries_Handler(srv interface{}, ct
 		FullMethod: SummarizerService_CreateFileComponentSummaries_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SummarizerServiceServer).CreateFileComponentSummaries(ctx, req.(*FileComponentIds))
+		return srv.(SummarizerServiceServer).CreateFileComponentSummaries(ctx, req.(*CreateFileComponentSummariesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

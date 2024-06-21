@@ -19,18 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	FileComponentsService_BatchExtractFileComponents_FullMethodName = "/FileComponentsService/BatchExtractFileComponents"
-	FileComponentsService_SaveFileComponents_FullMethodName         = "/FileComponentsService/SaveFileComponents"
-	FileComponentsService_GetSavedFileComponents_FullMethodName     = "/FileComponentsService/GetSavedFileComponents"
+	FileComponentsService_CreateFileComponents_FullMethodName = "/FileComponentsService/CreateFileComponents"
+	FileComponentsService_GetFileComponents_FullMethodName    = "/FileComponentsService/GetFileComponents"
 )
 
 // FileComponentsServiceClient is the client API for FileComponentsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileComponentsServiceClient interface {
-	BatchExtractFileComponents(ctx context.Context, in *BatchExtractFileComponentsRequest, opts ...grpc.CallOption) (*FileComponents, error)
-	SaveFileComponents(ctx context.Context, in *FileComponents, opts ...grpc.CallOption) (*SavedFileComponentIds, error)
-	GetSavedFileComponents(ctx context.Context, in *SavedFileComponentIds, opts ...grpc.CallOption) (*SavedFileComponents, error)
+	CreateFileComponents(ctx context.Context, in *UserFilePaths, opts ...grpc.CallOption) (*FileComponents, error)
+	GetFileComponents(ctx context.Context, in *FileComponentIds, opts ...grpc.CallOption) (*FileComponents, error)
 }
 
 type fileComponentsServiceClient struct {
@@ -41,27 +39,18 @@ func NewFileComponentsServiceClient(cc grpc.ClientConnInterface) FileComponentsS
 	return &fileComponentsServiceClient{cc}
 }
 
-func (c *fileComponentsServiceClient) BatchExtractFileComponents(ctx context.Context, in *BatchExtractFileComponentsRequest, opts ...grpc.CallOption) (*FileComponents, error) {
+func (c *fileComponentsServiceClient) CreateFileComponents(ctx context.Context, in *UserFilePaths, opts ...grpc.CallOption) (*FileComponents, error) {
 	out := new(FileComponents)
-	err := c.cc.Invoke(ctx, FileComponentsService_BatchExtractFileComponents_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, FileComponentsService_CreateFileComponents_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fileComponentsServiceClient) SaveFileComponents(ctx context.Context, in *FileComponents, opts ...grpc.CallOption) (*SavedFileComponentIds, error) {
-	out := new(SavedFileComponentIds)
-	err := c.cc.Invoke(ctx, FileComponentsService_SaveFileComponents_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *fileComponentsServiceClient) GetSavedFileComponents(ctx context.Context, in *SavedFileComponentIds, opts ...grpc.CallOption) (*SavedFileComponents, error) {
-	out := new(SavedFileComponents)
-	err := c.cc.Invoke(ctx, FileComponentsService_GetSavedFileComponents_FullMethodName, in, out, opts...)
+func (c *fileComponentsServiceClient) GetFileComponents(ctx context.Context, in *FileComponentIds, opts ...grpc.CallOption) (*FileComponents, error) {
+	out := new(FileComponents)
+	err := c.cc.Invoke(ctx, FileComponentsService_GetFileComponents_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,9 +61,8 @@ func (c *fileComponentsServiceClient) GetSavedFileComponents(ctx context.Context
 // All implementations must embed UnimplementedFileComponentsServiceServer
 // for forward compatibility
 type FileComponentsServiceServer interface {
-	BatchExtractFileComponents(context.Context, *BatchExtractFileComponentsRequest) (*FileComponents, error)
-	SaveFileComponents(context.Context, *FileComponents) (*SavedFileComponentIds, error)
-	GetSavedFileComponents(context.Context, *SavedFileComponentIds) (*SavedFileComponents, error)
+	CreateFileComponents(context.Context, *UserFilePaths) (*FileComponents, error)
+	GetFileComponents(context.Context, *FileComponentIds) (*FileComponents, error)
 	mustEmbedUnimplementedFileComponentsServiceServer()
 }
 
@@ -82,14 +70,11 @@ type FileComponentsServiceServer interface {
 type UnimplementedFileComponentsServiceServer struct {
 }
 
-func (UnimplementedFileComponentsServiceServer) BatchExtractFileComponents(context.Context, *BatchExtractFileComponentsRequest) (*FileComponents, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BatchExtractFileComponents not implemented")
+func (UnimplementedFileComponentsServiceServer) CreateFileComponents(context.Context, *UserFilePaths) (*FileComponents, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateFileComponents not implemented")
 }
-func (UnimplementedFileComponentsServiceServer) SaveFileComponents(context.Context, *FileComponents) (*SavedFileComponentIds, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SaveFileComponents not implemented")
-}
-func (UnimplementedFileComponentsServiceServer) GetSavedFileComponents(context.Context, *SavedFileComponentIds) (*SavedFileComponents, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSavedFileComponents not implemented")
+func (UnimplementedFileComponentsServiceServer) GetFileComponents(context.Context, *FileComponentIds) (*FileComponents, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFileComponents not implemented")
 }
 func (UnimplementedFileComponentsServiceServer) mustEmbedUnimplementedFileComponentsServiceServer() {}
 
@@ -104,56 +89,38 @@ func RegisterFileComponentsServiceServer(s grpc.ServiceRegistrar, srv FileCompon
 	s.RegisterService(&FileComponentsService_ServiceDesc, srv)
 }
 
-func _FileComponentsService_BatchExtractFileComponents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchExtractFileComponentsRequest)
+func _FileComponentsService_CreateFileComponents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserFilePaths)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FileComponentsServiceServer).BatchExtractFileComponents(ctx, in)
+		return srv.(FileComponentsServiceServer).CreateFileComponents(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FileComponentsService_BatchExtractFileComponents_FullMethodName,
+		FullMethod: FileComponentsService_CreateFileComponents_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileComponentsServiceServer).BatchExtractFileComponents(ctx, req.(*BatchExtractFileComponentsRequest))
+		return srv.(FileComponentsServiceServer).CreateFileComponents(ctx, req.(*UserFilePaths))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FileComponentsService_SaveFileComponents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FileComponents)
+func _FileComponentsService_GetFileComponents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileComponentIds)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FileComponentsServiceServer).SaveFileComponents(ctx, in)
+		return srv.(FileComponentsServiceServer).GetFileComponents(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FileComponentsService_SaveFileComponents_FullMethodName,
+		FullMethod: FileComponentsService_GetFileComponents_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileComponentsServiceServer).SaveFileComponents(ctx, req.(*FileComponents))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _FileComponentsService_GetSavedFileComponents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SavedFileComponentIds)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FileComponentsServiceServer).GetSavedFileComponents(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: FileComponentsService_GetSavedFileComponents_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileComponentsServiceServer).GetSavedFileComponents(ctx, req.(*SavedFileComponentIds))
+		return srv.(FileComponentsServiceServer).GetFileComponents(ctx, req.(*FileComponentIds))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -166,16 +133,12 @@ var FileComponentsService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FileComponentsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "BatchExtractFileComponents",
-			Handler:    _FileComponentsService_BatchExtractFileComponents_Handler,
+			MethodName: "CreateFileComponents",
+			Handler:    _FileComponentsService_CreateFileComponents_Handler,
 		},
 		{
-			MethodName: "SaveFileComponents",
-			Handler:    _FileComponentsService_SaveFileComponents_Handler,
-		},
-		{
-			MethodName: "GetSavedFileComponents",
-			Handler:    _FileComponentsService_GetSavedFileComponents_Handler,
+			MethodName: "GetFileComponents",
+			Handler:    _FileComponentsService_GetFileComponents_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

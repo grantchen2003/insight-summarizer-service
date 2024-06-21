@@ -28,23 +28,23 @@ func GetFileComponents(fileComponentIds FileComponentIds) ([]FileComponent, erro
 	defer conn.Close()
 
 	client := pb.NewFileComponentsServiceClient(conn)
-	request := &pb.SavedFileComponentIds{
-		SavedFileComponentIds: fileComponentIds,
+	request := &pb.FileComponentIds{
+		FileComponentIds: fileComponentIds,
 	}
 
-	resp, err := client.GetSavedFileComponents(context.Background(), request)
+	resp, err := client.GetFileComponents(context.Background(), request)
 	if err != nil {
 		return nil, err
 	}
 
 	var fileComponents []FileComponent
-	for _, pbSavedFileComponent := range resp.SavedFileComponents {
+	for _, pbFileComponent := range resp.FileComponents {
 		fileComponents = append(fileComponents, FileComponent{
-			Id:        int(pbSavedFileComponent.Id),
-			UserId:    pbSavedFileComponent.UserId,
-			FilePath:  pbSavedFileComponent.FilePath,
-			StartLine: int(pbSavedFileComponent.StartLine),
-			EndLine:   int(pbSavedFileComponent.EndLine),
+			Id:        int(pbFileComponent.Id),
+			UserId:    pbFileComponent.UserId,
+			FilePath:  pbFileComponent.FilePath,
+			StartLine: int(pbFileComponent.StartLine),
+			EndLine:   int(pbFileComponent.EndLine),
 		})
 	}
 

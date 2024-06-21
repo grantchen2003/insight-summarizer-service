@@ -4,7 +4,7 @@ syntax = "proto3";
 option go_package = "/protobufs";
 
 
-message FileComponentIds {
+message CreateFileComponentSummariesRequest {
     repeated int32 file_component_ids = 1;
 }
 
@@ -22,5 +22,5 @@ message FileComponentSummaries {
 
 
 service SummarizerService {
-    rpc CreateFileComponentSummaries(FileComponentIds) returns (FileComponentSummaries);
+    rpc CreateFileComponentSummaries(CreateFileComponentSummariesRequest) returns (FileComponentSummaries);
 }

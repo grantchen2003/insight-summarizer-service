@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 
@@ -17,16 +18,18 @@ type SummarizerServiceHandler struct {
 	pb.SummarizerServiceServer
 }
 
-func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Context, req *pb.FileComponentIds) (*pb.FileComponentSummaries, error) {
+func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Context, req *pb.CreateFileComponentSummariesRequest) (*pb.FileComponentSummaries, error) {
 	log.Println("received CreateFileComponentSummaries request")
 
 	fileComponents, err := fileComponentsService.GetFileComponents(req.FileComponentIds)
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
 	fileContents, err := fileChunksService.GetFileContents(getUserFilePaths(fileComponents))
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -54,6 +57,7 @@ func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Cont
 
 	fileComponentSummaries, err := database.BatchSaveFileComponentSummaries(fileComponentSummaryPayloads)
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
