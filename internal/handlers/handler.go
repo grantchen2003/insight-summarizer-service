@@ -23,17 +23,7 @@ func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Cont
 		return nil, err
 	}
 
-	var fileComponentSummaryPayloads []db.FileComponentPayload
-
-	for i, fileComponentId := range req.FileComponentIds {
-		fileComponentSummaryPayloads = append(
-			fileComponentSummaryPayloads,
-			db.FileComponentPayload{
-				FileComponentId: int(fileComponentId),
-				Summary:         utils.SummarizeSourceCode(fileComponents[i].Content),
-			},
-		)
-	}
+	fileComponentSummaryPayloads := getFileComponentSummaryPayloads(fileComponents)
 
 	database := db.GetSingletonInstance()
 
@@ -47,6 +37,22 @@ func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Cont
 	}
 
 	return resp, nil
+}
+
+func getFileComponentSummaryPayloads(fileComponents []fileComponentsService.FileComponent) []db.FileComponentPayload {
+	var fileComponentSummaryPayloads []db.FileComponentPayload
+
+	for i, fileComponent := range fileComponents {
+		fileComponentSummaryPayloads = append(
+			fileComponentSummaryPayloads,
+			db.FileComponentPayload{
+				FileComponentId: fileComponent.Id,
+				Summary:         utils.SummarizeSourceCode(fileComponents[i].Content),
+			},
+		)
+	}
+
+	return fileComponentSummaryPayloads
 }
 
 func castToPbFileComponentSummaries(fileComponentSummaries []db.FileComponentSummary) []*pb.FileComponentSummary {
