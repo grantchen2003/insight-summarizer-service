@@ -6,7 +6,7 @@ import (
 
 	db "github.com/grantchen2003/insight/summarizer/internal/database"
 	fileComponentsService "github.com/grantchen2003/insight/summarizer/internal/services/filecomponentsservice"
-	"github.com/grantchen2003/insight/summarizer/internal/utils/filecomponentsummarizer"
+	"github.com/grantchen2003/insight/summarizer/internal/utils"
 
 	pb "github.com/grantchen2003/insight/summarizer/internal/protobufs"
 )
@@ -26,8 +26,7 @@ func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Cont
 	var fileComponentSummaryPayloads []db.FileComponentPayload
 
 	for i, fileComponentId := range req.FileComponentIds {
-		// TODO: actually implement this
-		summary := filecomponentsummarizer.SummarizeFileComponentContent(fileComponents[i].Content)
+		summary := utils.SummarizeSourceCode(fileComponents[i].Content)
 
 		fileComponentSummaryPayloads = append(
 			fileComponentSummaryPayloads,
