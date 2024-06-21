@@ -42,12 +42,12 @@ func (s *SummarizerServiceHandler) CreateFileComponentSummaries(ctx context.Cont
 func getFileComponentSummaryPayloads(fileComponents []fileComponentsService.FileComponent) []db.FileComponentPayload {
 	var fileComponentSummaryPayloads []db.FileComponentPayload
 
-	for i, fileComponent := range fileComponents {
+	for _, fileComponent := range fileComponents {
 		fileComponentSummaryPayloads = append(
 			fileComponentSummaryPayloads,
 			db.FileComponentPayload{
 				FileComponentId: fileComponent.Id,
-				Summary:         utils.SummarizeSourceCode(fileComponents[i].Content),
+				Summary:         utils.SummarizeSourceCode(fileComponent.Content),
 			},
 		)
 	}
